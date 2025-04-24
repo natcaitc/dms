@@ -105,7 +105,25 @@
     },
   ]
 
-  import { ref, watch } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
+
+  import supabase from '@/supabaseClient'
+
+  const log = ref([])
+
+  async function fetchLogos () {
+    const { data, error } = await supabase
+      .from('logos')
+      .select('*')
+
+    if (error) {
+      console.error('Error fetching logos:', error)
+    } else {
+      log.value = data
+    }
+  }
+
+  onMounted(fetchLogos)
 
   const logos = [
     {

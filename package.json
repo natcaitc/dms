@@ -15,6 +15,7 @@
     "@fortawesome/sharp-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@mdi/font": "7.4.47",
+    "@supabase/supabase-js": "^2.49.4",
     "roboto-fontface": "*",
     "vue": "^3.5.13",
     "vuetify": "^3.8.1"
