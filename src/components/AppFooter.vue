@@ -45,7 +45,7 @@
     },
     {
       title: 'Vuetify Support',
-      icon: 'mdi:mdi-shield-star-outline',
+      icon: 'fass fa-shield-halved',
       href: 'https://support.vuetifyjs.com/',
     },
     {
@@ -55,7 +55,7 @@
     },
     {
       title: 'Vuetify GitHub',
-      icon: `mdi:mdi-github`,
+      icon: `fab fa-github`,
       href: 'https://github.com/vuetifyjs/vuetify',
     },
     {
@@ -65,7 +65,7 @@
     },
     {
       title: 'Vuetify Reddit',
-      icon: `mdi:mdi-reddit`,
+      icon: `fab fa-reddit`,
       href: 'https://reddit.com/r/vuetifyjs',
     },
   ]

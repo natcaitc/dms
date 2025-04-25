@@ -12,9 +12,13 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
+// Visualizer - DEV
+import { visualizer } from 'rollup-plugin-visualizer';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    visualizer({ open: true, filename: 'bundle-analysis.html' }), // This creates an HTML file with the bundle analysis
     VueRouter(),
     Layouts(),
     Vue({

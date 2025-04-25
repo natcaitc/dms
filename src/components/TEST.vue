@@ -10,7 +10,7 @@
       <div class="mb-6">
         <v-data-table-server
           v-model:items-per-page="itemsPerPage"
-          :headers="headers"
+          :headers="pendingHeaders"
           item-value="name"
           :items="serverItems"
           :items-length="totalItems"
@@ -62,7 +62,53 @@
         Approved Logos
       </div>
       <div>
-        <v-treeview :items="items" />
+        <v-tabs v-model="tab" background-color="primary" dark>
+          <v-tab v-for="type in types" :key="type">
+            {{ type }}
+          </v-tab>
+        </v-tabs>
+
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item v-for="type in types" :key="type">
+            <v-text-field
+              v-model="search"
+              hide-details
+              label="Search"
+              prepend-inner-icon="fass fa-magnifying-glass"
+              single-line
+              variant="outlined"
+            />
+
+            <v-data-table
+              :group-by="groupBy"
+              :headers="approvedHeaders"
+              hide-default-footer
+              item-value="name"
+              :items="logosByType"
+              :search="search"
+            >
+              <template #group-header="{ item, columns, toggleGroup, isGroupOpen }">
+                <tr>
+                  <td :colspan="columns.length">
+                    <div class="d-flex align-center">
+                      <v-btn
+                        color="medium-emphasis"
+                        density="comfortable"
+                        :icon="isGroupOpen(item) ? '$expand' : '$next'"
+                        size="small"
+                        variant="outlined"
+                        @click="toggleGroup(item)"
+                      />
+
+                      <span class="ms-4">{{ item.value }} Logos</span>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-tabs-window-item>
+        </v-tabs-window>
+
       </div>
     </div>
   </v-container>
@@ -73,53 +119,40 @@
 
   const dt = useDate()
 
-  const items = [
-    {
-      id: 1,
-      title: 'Applications :',
-      children: [
-        { id: 2, title: 'Calendar : app' },
-        { id: 3, title: 'Chrome : app' },
-        { id: 4, title: 'Webstorm : app' },
-      ],
-    },
-    {
-      id: 5,
-      title: 'Documents :',
-      children: [
-        {
-          id: 6,
-          title: 'vuetify :',
-          children: [
-            {
-              id: 7,
-              title: 'src :',
-              children: [
-                { id: 8, title: 'index : ts' },
-                { id: 9, title: 'bootstrap : ts' },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ]
-
   import { onMounted, ref, watch } from 'vue'
 
   import supabase from '@/supabaseClient'
 
   const log = ref([])
+  const types = ref(['Committee', 'Region', 'Facility', 'Event']);
+  const tab = ref(1);
+  const search = ref('');
+
+  const groupBy = computed (() => {
+    switch (tab.value) {
+      case 0:
+      case 3:
+        return [];
+      case 1:
+        return [{ key: 'region', order: 'asc' }]
+      case 2:
+        return [{ key: 'facility', order: 'asc' }]
+    }
+  });
 
   async function fetchLogos () {
     const { data, error } = await supabase
       .from('logos')
-      .select('*')
+      .select(`*, region:regions(code) as region`)
 
     if (error) {
       console.error('Error fetching logos:', error)
     } else {
-      log.value = data
+      log.value = data.map(logo => ({
+        ...logo,
+        region_code: logo.region ? logo.region.code : null,
+      }));
+      log.value.forEach(logo => delete logo.region);
     }
   }
 
@@ -127,13 +160,15 @@
 
   const logos = [
     {
-      name: 'NCE Convention Logo',
+      type: 1,
+      name: 'NCE Shirt Design 2025',
       date: dt.format(new Date('2025-01-02 20:01:47Z'), 'M-d-y'),
       region: 'NCE',
       facility: '- -',
       status: 'Pending',
     },
     {
+      type: 2,
       name: 'ZJX Logo',
       date: dt.format(new Date('2025-01-02 20:01:47Z'), 'M-d-y'),
       region: 'NSO',
@@ -141,27 +176,35 @@
       status: 'Pending',
     },
     {
-      name: 'KitKat',
-      date: 518,
-      region: 26,
-      facility: 65,
-      status: 'Pending',
+      type: 1,
+      name: 'NSO Convention Logo',
+      date: dt.format(new Date('2025-01-02 20:01:47Z'), 'M-d-y'),
+      region: 'NSO',
+      facility: '- -',
+      status: 'Approved',
     },
     {
-      name: 'Eclair',
-      date: 262,
-      region: 16,
-      facility: 23,
-      status: 'Pending',
+      type: 3,
+      name: 'SFO Convention 2025',
+      date: dt.format(new Date('2025-01-02 20:01:47Z'), 'M-d-y'),
+      region: '- -',
+      facility: '- -',
+      status: 'Approved',
     },
   ]
+  const logosByType = computed(() => {
+    return logos.filter(logo => logo.type === tab.value);
+  });
+  const unapprovedLogos = computed(() => {
+    return logos.filter(logo => logo.status === 'Pending')
+  });
   const FakeAPI = {
     async fetch ({ page, itemsPerPage, sortBy, search }) {
       return new Promise(resolve => {
         setTimeout(() => {
           const start = (page - 1) * itemsPerPage
           const end = start + itemsPerPage
-          const items = logos.slice().filter(item => {
+          const items = unapprovedLogos.value.slice().filter(item => {
             if (search.name && !item.name.toLowerCase().includes(search.name.toLowerCase())) {
               return false
             }
@@ -187,7 +230,7 @@
     },
   }
   const itemsPerPage = ref(5)
-  const headers = ref([
+  const pendingHeaders = ref([
     {
       title: 'Logo Name',
       align: 'start',
@@ -199,12 +242,22 @@
     { title: 'Facility', key: 'facility', align: 'end' },
     { title: 'Action', key: 'action', align: 'end', sortable: false },
   ])
+  const approvedHeaders = ref([
+    {
+      title: 'Logo Name',
+      align: 'start',
+      sortable: false,
+      key: 'name',
+    },
+    { title: 'Date', key: 'date', align: 'end' },
+    { title: 'Region', key: 'region', align: 'end' },
+    { title: 'Facility', key: 'facility', align: 'end' },
+  ])
   const serverItems = ref([])
   const loading = ref(true)
   const totalItems = ref(0)
   const name = ref('')
   const date = ref('')
-  const search = ref('')
 
   function loadItems ({ page, itemsPerPage, sortBy }) {
     loading.value = true

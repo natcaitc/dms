@@ -11,6 +11,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import HelloWorld from '@/components/HelloWorld.vue'
 import TEST from '@/components/TEST.vue'
+import UploadLogo from '@/components/UploadLogo.vue'
 
 // Create routes
 const routes = [
@@ -31,6 +32,17 @@ const routes = [
         path: '',
         name: 'test',
         component: TEST,
+      },
+    ],
+  },
+  {
+    path: '/upload',
+    component: DefaultLayout,
+    children: [
+      {
+        path: '',
+        name: 'upload',
+        component: UploadLogo,
       },
     ],
   },
