@@ -12,29 +12,83 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 
 // Fontawesome imports
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { aliases, fa } from 'vuetify/iconsets/fa-svg'
-// import { mdi } from 'vuetify/iconsets/mdi'
-// import { fas } from '@fortawesome/free-solid-svg-icons'
 import { all } from '@awesome.me/kit-8a3b5a2f73/icons'
-// import { fass } from '@awesome.me/kit-8a3b5a2f73/icons'
 
-// import { faUserSecret } from '@fortawesome/sharp-solid-svg-icons'
-// library.add(fass)
 library.add(...all)
+config.familyDefault = 'sharp' // set default so don't have to use 'fass' and 'fa-icon-name'
+config.styleDefault = 'solid'
 
+// Customize colors
+const customTheme = {
+  dark: false,
+  colors: {
+    background: '#F8F8FA',
+    surface: '#ffffff',
+  },
+}
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   icons: { // Use Fontawesome
     defaultSet: 'fa',
-    aliases,
+    aliases: { // Replace default fa.js.map for FA 6 Pro compatability when replacing MDI - map only works for FAS - FREE
+      ...aliases,
+      file: 'fass fa-paperclip',
+      clear: 'fass fa-circle-xmark',
+      last: 'fass fa-forward-step',
+      sortAsc: 'fass fa-chevron-up',
+      sortDesc: 'fass fa-chevron-down',
+      next: 'fass fa-chevron-right',
+      prev: 'fass fa-chevron-left',
+      collapse: 'fass fa-chevron-up',
+      complete: 'fass fa-check',
+      cancel: 'fass fa-circle-xmark',
+      close: 'fass fa-xmark',
+      delete: 'fass fa-trash',
+      success: 'fass fa-circle-check',
+      info: 'fass fa-circle-info',
+      warning: 'fass fa-triangle-exclamation',
+      error: 'fass fa-octagon-exclamation',
+      checkboxOn: 'fass fa-square-check',
+      checkboxOff: 'far fa-square',
+      delimeter: 'fass fa-circle-dot',
+      expand: 'fass fa-chevron-down',
+      menu: 'fass fa-bars',
+      subgroup: 'fass fa-caret-down',
+      dropdown: 'fass fa-caret-down',
+      radioOn: 'fass fa-circle-dot',
+      radioOff: 'far fa-circle',
+      edit: 'fass fa-pen-to-square',
+      ratingEmpty: 'far fa-star',
+      ratingFull: 'fass fa-star',
+      ratingHalf: 'fass fa-star-half-stroke',
+      loading: 'fass fa-rotate',
+      first: 'fass fa-backward-step',
+      unfold: 'fass fa-up-down',
+      plus: 'fass fa-plus',
+      minus: 'fass fa-minus',
+      calendar: 'fass fa-calendar',
+      treeviewCollapse: 'fass fa-caret-down',
+      treeviewExpand: 'fass fa-caret-up',
+      eyeDropper: 'fass fa-eye-dropper',
+    },
     sets: {
       fa,
-      // mdi,
-    },
+    }
+    ,
   },
-  components: {},
+  components: {
+  }
+  ,
   theme: {
-    defaultTheme: 'dark',
-  },
+    defaultTheme: 'customTheme',
+    themes
+    :
+  {
+    customTheme,
+  }
+    ,
+  }
+  ,
 })

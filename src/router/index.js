@@ -10,7 +10,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 // import { routes } from 'vue-router/auto-routes'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import HelloWorld from '@/components/HelloWorld.vue'
-import TEST from '@/components/TEST.vue'
+import LogoCRUD from '@/components/LogoCRUD.vue'
 import UploadLogo from '@/components/UploadLogo.vue'
 
 // Create routes
@@ -25,24 +25,23 @@ const routes = [
       },
     ],
   },
-  { path: '/test',
+  { path: '/logos',
     component: DefaultLayout,
     children: [
       {
         path: '',
-        name: 'test',
-        component: TEST,
+        name: 'logos',
+        component: LogoCRUD,
       },
-    ],
-  },
-  {
-    path: '/upload',
-    component: DefaultLayout,
-    children: [
       {
-        path: '',
-        name: 'upload',
-        component: UploadLogo,
+        path: 'upload',
+        children: [
+          {
+            path: '',
+            name: 'upload',
+            component: UploadLogo,
+          },
+        ],
       },
     ],
   },

@@ -1,15 +1,19 @@
 <template>
   <v-container class="fill-height">
     <div>
-      <div class="mb-8 text-center">
+      <div class="mb-8">
         <h1 class="text-h2 font-weight-bold">Review Logos</h1>
+        <v-btn class="mt-3" prepend-icon="cloud-arrow-up" to="/logos/upload">Submit Logo for Approval</v-btn>
       </div>
+
       <div class="font-weight-bold text-orange-lighten-1">
         Pending Logos
       </div>
       <div class="mb-6">
         <v-data-table-server
           v-model:items-per-page="itemsPerPage"
+          density="compact"
+          :header-props="{align: 'left'}"
           :headers="pendingHeaders"
           item-value="name"
           :items="serverItems"
@@ -62,7 +66,7 @@
         Approved Logos
       </div>
       <div>
-        <v-tabs v-model="tab" background-color="primary" dark>
+        <v-tabs v-model="tab" background-color="primary">
           <v-tab v-for="type in types" :key="type">
             {{ type }}
           </v-tab>

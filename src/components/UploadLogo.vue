@@ -30,9 +30,9 @@
 
             <v-divider class="mt-2 mb-4" :thickness="4" />
             <h2 class="text-left mb-3">Logo Details</h2>
-
             <v-text-field label="Logo Name" />
             <v-file-input label="File input" variant="outlined" />
+            <!--            prepend-icon="fass fa-jet-fighter-up"-->
             <v-btn block class="mt-2" type="submit">Submit</v-btn>
           </v-form>
         </v-sheet></div>

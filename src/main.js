@@ -6,6 +6,7 @@
 
 // Plugins
 import { registerPlugins } from '@/plugins'
+import './styles/styles.scss';
 
 // Components
 import App from './App.vue'
@@ -17,8 +18,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'/**/
 
 const app = createApp(App)
 
+app.component('FontAwesomeIcon', FontAwesomeIcon) // Register component globally
 registerPlugins(app)
 
-app.component('FontAwesomeIcon', FontAwesomeIcon) // Register component globally
 
 app.mount('#app')
