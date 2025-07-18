@@ -14,6 +14,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // Visualizer - DEV
 import { visualizer } from 'rollup-plugin-visualizer';
+import fs from "fs";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -80,6 +81,10 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    https: {
+      key: fs.readFileSync('./local.test+4-key.pem'),
+      cert: fs.readFileSync('./local.test+4.pem'),
+    },
   },
   css: {
     preprocessorOptions: {

@@ -12,6 +12,19 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import HelloWorld from '@/components/HelloWorld.vue'
 import LogoCRUD from '@/components/LogoCRUD.vue'
 import UploadLogo from '@/components/UploadLogo.vue'
+import ProfilePage from '@/pages/ProfilePage.vue'
+import { useAuth0 } from '@auth0/auth0-vue'
+
+// Auth guard
+const authGuard = (to, from, next) => {
+  const { isAuthenticated, loginWithRedirect } = useAuth0()
+
+  if (isAuthenticated.value) {
+    next()
+  } else {
+    loginWithRedirect({ appState: { targetUrl: to.fullPath } })
+  }
+}
 
 // Create routes
 const routes = [
@@ -23,6 +36,18 @@ const routes = [
         name: 'home',
         component: HelloWorld,
       },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: ProfilePage,
+        beforeEnter: authGuard,
+      },
+      {
+        path: 'verify',
+        name: 'verify',
+        component: () => import('@/pages/VerifyPage.vue'),
+        beforeEnter: authGuard,
+      },
     ],
   },
   { path: '/logos',
@@ -32,6 +57,7 @@ const routes = [
         path: '',
         name: 'logos',
         component: LogoCRUD,
+        beforeEnter: authGuard,
       },
       {
         path: 'upload',
@@ -40,6 +66,7 @@ const routes = [
             path: '',
             name: 'upload',
             component: UploadLogo,
+            beforeEnter: authGuard,
           },
         ],
       },

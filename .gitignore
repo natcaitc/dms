@@ -2,6 +2,10 @@
 node_modules
 /dist
 
+#keys
+local.test+4-key.pem
+local.test+4.pem
+
 # local env files
 .env
 .env.local
